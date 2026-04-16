@@ -57,17 +57,15 @@ cd Fitness-Tracker
 cd backend
 npm install
 ```
-Create a `.env` file in the `backend` folder:
-```env
-PORT=5000
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_super_secret_key
-CLIENT_URL=http://localhost:5173
-CLOUDINARY_CLOUD_NAME=...
-CLOUDINARY_API_KEY=...
-CLOUDINARY_API_SECRET=...
+Create a `.env` file in the `backend` folder by copying `.env.example`:
+```bash
+cp .env.example .env
 ```
-`npm start`
+Then, update the variables in `.env` with your actual credentials.
+
+```bash
+npm start
+```
 
 ### 3. Frontend Setup
 ```bash
