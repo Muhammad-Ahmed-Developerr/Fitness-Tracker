@@ -78,6 +78,7 @@ const updateUserProfile = async (req, res) => {
         avatar: updatedUser.avatar,
         fitnessGoals: updatedUser.fitnessGoals,
         preferences: updatedUser.preferences,
+        role: updatedUser.role,
       },
     });
 

@@ -35,6 +35,11 @@ const userSchema = new mongoose.Schema({
     theme: { type: String, enum: ['light', 'dark'], default: 'dark' },
     units: { type: String, enum: ['kg', 'lbs'], default: 'lbs' },
     notificationsEnabled: { type: Boolean, default: true }
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user'
   }
 }, { timestamps: true });
 

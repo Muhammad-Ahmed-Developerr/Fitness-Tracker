@@ -11,13 +11,27 @@ import Profile from './pages/Profile';
 import Progress from './pages/Progress';
 import Settings from './pages/Settings';
 import Support from './pages/Support';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import UserManagement from './pages/admin/UserManagement';
+import AdminNotifications from './pages/admin/AdminNotifications';
+import AdminAnalytics from './pages/admin/AdminAnalytics';
+import AdminSupport from './pages/admin/AdminSupport';
 import MainLayout from './components/layout/MainLayout';
+import AdminLayout from './components/layout/AdminLayout';
 import { Toaster } from 'react-hot-toast';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return <div className="h-screen flex items-center justify-center text-accent">Loading...</div>;
   if (!user) return <Navigate to="/login" replace />;
+  return children;
+}
+
+function AdminRoute({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="h-screen flex items-center justify-center text-accent">Loading...</div>;
+  if (!user) return <Navigate to="/login" replace />;
+  if (user.role !== 'admin') return <Navigate to="/dashboard" replace />;
   return children;
 }
 
@@ -58,6 +72,28 @@ function AppContent() {
         <Route 
           path="/support" 
           element={<ProtectedRoute><MainLayout><Support /></MainLayout></ProtectedRoute>} 
+        />
+        
+        {/* Admin Routes */}
+        <Route 
+          path="/admin/dashboard" 
+          element={<AdminRoute><AdminLayout><AdminDashboard /></AdminLayout></AdminRoute>} 
+        />
+        <Route 
+          path="/admin/users" 
+          element={<AdminRoute><AdminLayout><UserManagement /></AdminLayout></AdminRoute>} 
+        />
+        <Route 
+          path="/admin/support" 
+          element={<AdminRoute><AdminLayout><AdminSupport /></AdminLayout></AdminRoute>} 
+        />
+        <Route 
+          path="/admin/analytics" 
+          element={<AdminRoute><AdminLayout><AdminAnalytics /></AdminLayout></AdminRoute>} 
+        />
+        <Route 
+          path="/admin/notifications" 
+          element={<AdminRoute><AdminLayout><AdminNotifications /></AdminLayout></AdminRoute>} 
         />
         
         <Route path="/" element={<Navigate to="/dashboard" replace />} />

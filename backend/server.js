@@ -32,6 +32,8 @@ app.use('/api/notifications', require('./routes/notificationRoutes'));
 app.use('/api/reminders', require('./routes/reminderRoutes'));
 app.use('/api/support', require('./routes/supportRoutes'));
 app.use('/api/progress', require('./routes/progressRoutes'));
+app.use('/api/admin', require('./routes/adminRoutes'));
+
 // Error Handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
