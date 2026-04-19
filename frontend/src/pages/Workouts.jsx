@@ -30,6 +30,10 @@ const Workouts = () => {
   const [exercises, setExercises] = useState([{ name: '', sets: 3, reps: 10, weight: 0 }]);
 
   useEffect(() => {
+    setSearch(searchParams.get('search') || '');
+  }, [searchParams]);
+
+  useEffect(() => {
     if (dateRange.startDate && dateRange.endDate) {
         const timer = setTimeout(() => {
         fetchWorkouts();
@@ -152,7 +156,7 @@ const Workouts = () => {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      <div className="relative glass-card border-none p-6 md:p-10 mb-8 bg-gradient-to-br from-[#0A2740] to-slate-900 shadow-2xl flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+      <div className="relative z-20 glass-card border-none p-6 md:p-10 mb-8 bg-gradient-to-br from-[#0A2740] to-slate-900 shadow-2xl flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
         <div>
           <h1 className="text-3xl font-extrabold text-white mb-2 flex items-center gap-3">
              <Dumbbell className="text-accent w-8 h-8"/> Workout Tracker

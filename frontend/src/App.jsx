@@ -1,18 +1,37 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { Toaster } from 'react-hot-toast';
+
+// Core Pages (Fast Load)
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
-import VerifyOTP from './pages/auth/VerifyOTP';
-import ForgotPassword from './pages/auth/ForgotPassword';
-import Dashboard from './pages/Dashboard';
-import Workouts from './pages/Workouts';
-import Nutrition from './pages/Nutrition';
-import Profile from './pages/Profile';
-import Progress from './pages/Progress';
-import Settings from './pages/Settings';
-import Support from './pages/Support';
 import MainLayout from './components/layout/MainLayout';
-import { Toaster } from 'react-hot-toast';
+
+// Lazy Loaded SaaS Modules
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Workouts = lazy(() => import('./pages/Workouts'));
+const Nutrition = lazy(() => import('./pages/Nutrition'));
+const Profile = lazy(() => import('./pages/Profile'));
+const Progress = lazy(() => import('./pages/Progress'));
+const Settings = lazy(() => import('./pages/Settings'));
+const Support = lazy(() => import('./pages/Support'));
+const Search = lazy(() => import('./pages/Search'));
+const Subscription = lazy(() => import('./pages/Subscription'));
+const AICoach = lazy(() => import('./pages/AICoach'));
+const Habits = lazy(() => import('./pages/Habits'));
+const Goals = lazy(() => import('./pages/Goals'));
+const Tasks = lazy(() => import('./pages/Tasks'));
+const AdminPanel = lazy(() => import('./pages/AdminPanel'));
+const VerifyOTP = lazy(() => import('./pages/auth/VerifyOTP'));
+const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'));
+
+const LoadingFallback = () => (
+  <div className="h-screen flex flex-col items-center justify-center bg-dark text-accent">
+    <div className="w-12 h-12 border-4 border-accent border-t-transparent rounded-full animate-spin mb-4"></div>
+    <p className="font-mono text-xs uppercase tracking-[0.2em] animate-pulse">Initializing Interface...</p>
+  </div>
+);
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -21,47 +40,93 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
+function AdminRoute({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="h-screen flex items-center justify-center text-accent">Loading...</div>;
+  if (!user || user.role !== 'admin') return <Navigate to="/dashboard" replace />;
+  return children;
+}
+
 function AppContent() {
   return (
     <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/verify-otp" element={<VerifyOTP />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        
-        {/* Protected Routes */}
-        <Route 
-          path="/dashboard" 
-          element={<ProtectedRoute><MainLayout><Dashboard /></MainLayout></ProtectedRoute>} 
-        />
-        <Route 
-          path="/workouts" 
-          element={<ProtectedRoute><MainLayout><Workouts /></MainLayout></ProtectedRoute>} 
-        />
-        <Route 
-          path="/nutrition" 
-          element={<ProtectedRoute><MainLayout><Nutrition /></MainLayout></ProtectedRoute>} 
-        />
-        <Route 
-          path="/profile" 
-          element={<ProtectedRoute><MainLayout><Profile /></MainLayout></ProtectedRoute>} 
-        />
-        <Route 
-          path="/progress" 
-          element={<ProtectedRoute><MainLayout><Progress /></MainLayout></ProtectedRoute>} 
-        />
-        <Route 
-          path="/settings" 
-          element={<ProtectedRoute><MainLayout><Settings /></MainLayout></ProtectedRoute>} 
-        />
-        <Route 
-          path="/support" 
-          element={<ProtectedRoute><MainLayout><Support /></MainLayout></ProtectedRoute>} 
-        />
-        
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-      </Routes>
+      <Suspense fallback={<LoadingFallback />}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/verify-otp" element={<VerifyOTP />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          
+          {/* Protected Routes */}
+          <Route 
+            path="/dashboard" 
+            element={<ProtectedRoute><MainLayout><Dashboard /></MainLayout></ProtectedRoute>} 
+          />
+          <Route 
+            path="/workouts" 
+            element={<ProtectedRoute><MainLayout><Workouts /></MainLayout></ProtectedRoute>} 
+          />
+          <Route 
+            path="/nutrition" 
+            element={<ProtectedRoute><MainLayout><Nutrition /></MainLayout></ProtectedRoute>} 
+          />
+          <Route 
+            path="/profile" 
+            element={<ProtectedRoute><MainLayout><Profile /></MainLayout></ProtectedRoute>} 
+          />
+          <Route 
+            path="/progress" 
+            element={<ProtectedRoute><MainLayout><Progress /></MainLayout></ProtectedRoute>} 
+          />
+          <Route 
+            path="/settings" 
+            element={<ProtectedRoute><MainLayout><Settings /></MainLayout></ProtectedRoute>} 
+          />
+          <Route 
+            path="/support" 
+            element={<ProtectedRoute><MainLayout><Support /></MainLayout></ProtectedRoute>} 
+          />
+          <Route 
+            path="/ai-coach" 
+            element={<ProtectedRoute><MainLayout><AICoach /></MainLayout></ProtectedRoute>} 
+          />
+
+          <Route 
+            path="/habits" 
+            element={<ProtectedRoute><MainLayout><Habits /></MainLayout></ProtectedRoute>} 
+          />
+
+          <Route 
+            path="/goals" 
+            element={<ProtectedRoute><MainLayout><Goals /></MainLayout></ProtectedRoute>} 
+          />
+
+          <Route 
+            path="/tasks" 
+            element={<ProtectedRoute><MainLayout><Tasks /></MainLayout></ProtectedRoute>} 
+          />
+
+          <Route 
+            path="/subscription" 
+            element={<ProtectedRoute><MainLayout><Subscription /></MainLayout></ProtectedRoute>} 
+          />
+
+          <Route 
+            path="/search" 
+            element={<ProtectedRoute><MainLayout><Search /></MainLayout></ProtectedRoute>} 
+          />
+
+          {/* Admin Route */}
+          <Route 
+            path="/admin" 
+            element={<AdminRoute><MainLayout><AdminPanel /></MainLayout></AdminRoute>} 
+          />
+
+
+          
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </Suspense>
     </Router>
   );
 }

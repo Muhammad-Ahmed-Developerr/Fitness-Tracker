@@ -1,19 +1,25 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Dumbbell, Apple, UserCircle, LogOut, TrendingUp, Settings, HelpCircle } from 'lucide-react';
+import { LayoutDashboard, Dumbbell, Apple, UserCircle, LogOut, TrendingUp, Settings, HelpCircle, Sparkles, CheckSquare, Target, Flame, CreditCard } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const Sidebar = ({ onNavClick, className = '' }) => {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const navItems = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
+    { name: 'AI Coach', icon: Sparkles, path: '/ai-coach' },
     { name: 'Workouts', icon: Dumbbell, path: '/workouts' },
     { name: 'Nutrition', icon: Apple, path: '/nutrition' },
+    { name: 'Habits', icon: Flame, path: '/habits' },
+    { name: 'Goals', icon: Target, path: '/goals' },
+    { name: 'Tasks', icon: CheckSquare, path: '/tasks' },
     { name: 'Progress', icon: TrendingUp, path: '/progress' },
+    { name: 'Subscription', icon: CreditCard, path: '/subscription' },
     { name: 'Profile', icon: UserCircle, path: '/profile' },
     { name: 'Settings', icon: Settings, path: '/settings' },
     { name: 'Support', icon: HelpCircle, path: '/support' },
   ];
+
 
   return (
     <div className={`w-64 glass border-y-0 border-l-0 rounded-none h-full min-h-screen flex flex-col ${className}`}>

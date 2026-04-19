@@ -1,5 +1,5 @@
 const Reminder = require('../models/Reminder');
-const Notification = require('../models/Notification');
+const { createNotification } = require('../utils/notificationHelper');
 
 const getReminders = async (req, res) => {
   try {
@@ -17,12 +17,13 @@ const createReminder = async (req, res) => {
       user: req.user._id, title, description, datetime, type
     });
     
-    // Also notify them right away (or you could run a cron job)
-    await Notification.create({
-      user: req.user._id,
-      message: `Reminder set: ${title}`,
-      type: 'Reminder'
-    });
+    // Also notify them right away
+    await createNotification(
+      req.user._id,
+      `Reminder set: ${title}`,
+      'Reminder'
+    );
+
 
     res.status(201).json({ success: true, data: reminder });
   } catch (error) {

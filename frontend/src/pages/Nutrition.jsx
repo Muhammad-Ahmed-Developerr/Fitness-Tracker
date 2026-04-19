@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from 'recharts';
 import api from '../services/api';
@@ -16,13 +17,19 @@ const Nutrition = () => {
   const [editId, setEditId] = useState(null);
 
   // Filters
-  const [search, setSearch] = useState('');
+  const [searchParams] = useSearchParams();
+  const initSearch = searchParams.get('search') || '';
+  const [search, setSearch] = useState(initSearch);
   const [filterType, setFilterType] = useState('');
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' });
 
   // Form State
   const initialForm = { mealType: 'Breakfast', foodName: '', calories: '', protein: '', carbs: '', fats: '', date: new Date().toISOString().split('T')[0] };
   const [formData, setFormData] = useState(initialForm);
+
+  useEffect(() => {
+    setSearch(searchParams.get('search') || '');
+  }, [searchParams]);
 
   useEffect(() => {
     if (dateRange.startDate && dateRange.endDate) {

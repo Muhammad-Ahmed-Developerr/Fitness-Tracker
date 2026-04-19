@@ -1,5 +1,5 @@
 const Workout = require('../models/Workout');
-const Notification = require('../models/Notification');
+const { createNotification } = require('../utils/notificationHelper');
 
 // @desc    Get user workouts
 // @route   GET /api/workouts
@@ -66,11 +66,18 @@ const addWorkout = async (req, res) => {
       date: date ? new Date(date) : Date.now(),
     });
 
-    await Notification.create({
-      user: req.user._id,
-      message: `You successfully logged a new workout: ${muscleGroup || category}`,
-      type: 'Workout'
-    });
+    const gamificationService = require('../services/gamificationService');
+
+    await createNotification(
+      req.user._id,
+      `You successfully logged a new workout: ${muscleGroup || category}`,
+      'Workout'
+    );
+
+    // Gamification Hook
+    await gamificationService.awardXP(req.user._id, 100);
+    await gamificationService.updateStreak(req.user._id);
+
 
     res.status(201).json({ success: true, data: workout });
   } catch (error) {

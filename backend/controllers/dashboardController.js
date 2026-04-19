@@ -115,6 +115,16 @@ const getDashboardData = async (req, res) => {
       }
     ]);
 
+    const analyticsService = require('../services/analyticsService');
+
+    // Advanced Stats using Analytics Service
+    const [insights, heatmap, muscleDist, correlation] = await Promise.all([
+      analyticsService.generateInsights(userId),
+      analyticsService.getWorkoutHeatmap(userId, currentStart, currentEnd),
+      analyticsService.getMuscleGroupDistribution(userId, currentStart, currentEnd),
+      analyticsService.getCalorieWeightCorrelation(userId)
+    ]);
+
     res.status(200).json({
       success: true,
       data: {
@@ -134,10 +144,15 @@ const getDashboardData = async (req, res) => {
         charts: {
           weightProgress,
           recentNutrition,
-          workoutCategoryFreq
-        }
+          workoutCategoryFreq,
+          heatmap,
+          muscleDist,
+          correlation
+        },
+        insights
       }
     });
+
 
   } catch (error) {
     console.error(error);

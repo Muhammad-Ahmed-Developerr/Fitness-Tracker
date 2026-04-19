@@ -37,4 +37,9 @@ const nutritionSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
+// Performance Indexes
+nutritionSchema.index({ user: 1, date: -1 });
+nutritionSchema.index({ foodName: 1 });
+nutritionSchema.index({ mealType: 1 });
+
 module.exports = mongoose.model('Nutrition', nutritionSchema);

@@ -1,4 +1,5 @@
 const Progress = require('../models/Progress');
+const { createNotification } = require('../utils/notificationHelper');
 
 // @desc    Get user progress logs
 // @route   GET /api/progress
@@ -53,6 +54,12 @@ const addProgress = async (req, res) => {
       notes: notes || '',
       date: logDate,
     });
+
+    await createNotification(
+      req.user._id,
+      `You tracked your progress: ${weight} kg recorded.`,
+      'Progress'
+    );
 
     res.status(201).json({ success: true, data: progress });
   } catch (error) {

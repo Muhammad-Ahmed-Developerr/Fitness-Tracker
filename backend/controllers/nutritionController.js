@@ -1,4 +1,5 @@
 const Nutrition = require('../models/Nutrition');
+const { createNotification } = require('../utils/notificationHelper');
 
 // @desc    Get user nutrition with aggregated macros
 // @route   GET /api/nutrition
@@ -65,6 +66,12 @@ const addNutrition = async (req, res) => {
       fats,
       date: date ? new Date(date) : Date.now(),
     });
+
+    await createNotification(
+      req.user._id,
+      `You logged a new nutrition item: ${foodName} (${calories} kcal)`,
+      'Nutrition'
+    );
 
     res.status(201).json({ success: true, data: nutrition });
   } catch (error) {

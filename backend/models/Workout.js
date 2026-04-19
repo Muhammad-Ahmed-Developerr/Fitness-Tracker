@@ -38,4 +38,11 @@ const workoutSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
+// Performance Indexes
+workoutSchema.index({ user: 1, date: -1 });
+workoutSchema.index({ 'exercises.name': 'text', category: 'text', muscleGroup: 'text' });
+workoutSchema.index({ 'exercises.name': 1 });
+workoutSchema.index({ category: 1 });
+workoutSchema.index({ muscleGroup: 1 });
+
 module.exports = mongoose.model('Workout', workoutSchema);

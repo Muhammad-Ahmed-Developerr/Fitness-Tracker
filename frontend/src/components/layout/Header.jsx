@@ -40,7 +40,13 @@ const Header = ({ onMenuClick }) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
     toast(`Searching: ${searchQuery}`, { icon: '🔍' });
-    navigate(`/workouts?search=${encodeURIComponent(searchQuery)}`);
+
+    const path = window.location.pathname;
+    if (path === '/workouts' || path === '/nutrition') {
+        navigate(`${path}?search=${encodeURIComponent(searchQuery)}`);
+    } else {
+        navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+    }
   };
 
   const unreadCount = notifications.filter(n => !n.read).length;

@@ -3,6 +3,7 @@ const Workout = require('../models/Workout');
 const Nutrition = require('../models/Nutrition');
 const Progress = require('../models/Progress');
 const cloudinary = require('cloudinary').v2;
+const { createNotification } = require('../utils/notificationHelper');
 
 // Configure Cloudinary
 if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_CLOUD_NAME !== 'placeholder') {
@@ -68,6 +69,12 @@ const updateUserProfile = async (req, res) => {
     }
 
     const updatedUser = await user.save();
+
+    await createNotification(
+      req.user._id,
+      'Your profile was successfully updated.',
+      'Profile'
+    );
 
     res.status(200).json({
       success: true,
