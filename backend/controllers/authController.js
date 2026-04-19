@@ -166,6 +166,7 @@ const loginUser = async (req, res) => {
         email: user.email,
         avatar: user.avatar,
         fitnessGoals: user.fitnessGoals,
+        role: user.role,
       },
       accessToken,
     });
@@ -346,6 +347,7 @@ const googleOAuthLogin = async (req, res) => {
         email: user.email,
         avatar: user.avatar,
         fitnessGoals: user.fitnessGoals,
+        role: user.role,
       },
       accessToken,
     });

@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
 
-const Header = ({ onMenuClick }) => {
+const Header = ({ onMenuClick, isAdmin = false }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
@@ -40,6 +40,7 @@ const Header = ({ onMenuClick }) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
     toast(`Searching: ${searchQuery}`, { icon: '🔍' });
+<<<<<<< HEAD
 
     const path = window.location.pathname;
     if (path === '/workouts' || path === '/nutrition') {
@@ -47,23 +48,26 @@ const Header = ({ onMenuClick }) => {
     } else {
         navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
     }
+=======
+    navigate(isAdmin ? `/admin/users?query=${encodeURIComponent(searchQuery)}` : `/workouts?search=${encodeURIComponent(searchQuery)}`);
+>>>>>>> 6e72fa92aeb6be5332e41f7d27a27f698cdfc9ff
   };
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <header className="h-20 flex items-center justify-between px-4 md:px-6 w-full z-30 glass-card rounded-none border-t-0 border-x-0 relative md:static">
+    <header className={`h-20 flex items-center justify-between px-4 md:px-6 w-full z-30 rounded-none border-t-0 border-x-0 relative md:static ${isAdmin ? 'bg-[#07111a] border-b border-purple-500/10' : 'glass-card'}`}>
       <div className="flex items-center gap-4 flex-1">
         <button onClick={onMenuClick} className="lg:hidden p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition">
           <Menu className="w-6 h-6" />
         </button>
 
         <form onSubmit={handleSearch} className="hidden md:flex relative w-64 lg:w-96 group">
-          <Search className="w-5 h-5 absolute left-4 top-2.5 text-gray-400 group-focus-within:text-accent transition-colors" />
+          <Search className={`w-5 h-5 absolute left-4 top-2.5 text-gray-400 transition-colors ${isAdmin ? 'group-focus-within:text-purple-400' : 'group-focus-within:text-accent'}`} />
           <input 
             type="text" 
-            placeholder="Global Search (Workouts...)" 
-            className="w-full bg-slate-900/60 border border-white/5 rounded-full py-2.5 pl-12 pr-4 text-white focus:outline-none focus:border-accent/50 focus:bg-slate-900 transition-all shadow-inner"
+            placeholder={isAdmin ? "System Intelligence Search..." : "Global Search (Workouts...)"} 
+            className={`w-full bg-slate-900/60 border border-white/5 rounded-full py-2.5 pl-12 pr-4 text-white focus:outline-none transition-all shadow-inner ${isAdmin ? 'focus:border-purple-500/30' : 'focus:border-accent/50'}`}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -74,15 +78,15 @@ const Header = ({ onMenuClick }) => {
         <div className="relative">
           <button onClick={() => setShowNotifications(!showNotifications)} className="p-2 text-gray-400 hover:text-white transition group focus:outline-none">
             <Bell className="w-6 h-6 group-hover:scale-110 transition-transform" />
-            {unreadCount > 0 && <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#0A2740] animate-pulse"></span>}
+            {unreadCount > 0 && <span className={`absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full border-2 animate-pulse ${isAdmin ? 'bg-purple-500 border-[#07111a]' : 'bg-red-500 border-[#0A2740]'}`}></span>}
           </button>
           
           {showNotifications && (
-            <div className="absolute right-0 mt-6 w-80 md:w-96 bg-[#021B32] shadow-2xl border border-white/10 rounded-2xl overflow-hidden z-50">
+            <div className={`absolute right-0 mt-6 w-80 md:w-96 shadow-2xl border border-white/10 rounded-2xl overflow-hidden z-50 ${isAdmin ? 'bg-[#07111a]' : 'bg-[#021B32]'}`}>
               <div className="p-4 border-b border-white/10 flex justify-between items-center bg-slate-900/80 backdrop-blur-md relative z-10">
                 <h4 className="font-bold text-white text-lg">Notifications</h4>
                 <div className="flex items-center gap-3">
-                    <span className="text-xs bg-accent/20 text-accent font-bold px-2 py-1 rounded-md">{unreadCount} New</span>
+                    <span className={`text-xs font-bold px-2 py-1 rounded-md ${isAdmin ? 'bg-purple-500/20 text-purple-400' : 'bg-accent/20 text-accent'}`}>{unreadCount} New</span>
                     <button onClick={() => setShowNotifications(false)} className="text-gray-400 hover:text-white"><X className="w-4 h-4"/></button>
                 </div>
               </div>
@@ -95,12 +99,12 @@ const Header = ({ onMenuClick }) => {
                 ) : (
                   notifications.map(note => (
                     <div key={note._id} className={`p-4 border-b border-white/5 flex flex-col gap-2 transition hover:bg-white/5 ${note.read ? 'opacity-50' : 'bg-slate-800/40 relative'}`}>
-                      {!note.read && <div className="absolute left-0 top-0 w-1 h-full bg-accent"></div>}
+                      {!note.read && <div className={`absolute left-0 top-0 w-1 h-full ${isAdmin ? 'bg-purple-500' : 'bg-accent'}`}></div>}
                       <p className="text-sm text-gray-200 leading-snug font-medium pl-1">{note.message}</p>
                       <div className="flex justify-between items-center mt-1 pl-1">
                         <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{new Date(note.createdAt).toLocaleString()}</span>
                         {!note.read && (
-                          <button onClick={() => markAsRead(note._id)} className="text-xs text-accent font-bold hover:text-white transition">Mark read</button>
+                          <button onClick={() => markAsRead(note._id)} className={`text-xs font-bold hover:text-white transition ${isAdmin ? 'text-purple-400' : 'text-accent'}`}>Mark read</button>
                         )}
                       </div>
                     </div>
@@ -112,16 +116,18 @@ const Header = ({ onMenuClick }) => {
         </div>
         
         <Link to="/profile" className="flex items-center gap-3 pl-4 md:pl-7 border-l border-white/10 hover:opacity-80 transition cursor-pointer group">
-          <div className="w-10 h-10 rounded-full bg-accent/10 border border-accent/30 group-hover:border-accent transition-colors flex items-center justify-center overflow-hidden">
+          <div className={`w-10 h-10 rounded-full border transition-colors flex items-center justify-center overflow-hidden ${isAdmin ? 'bg-purple-500/10 border-purple-500/30 group-hover:border-purple-500' : 'bg-accent/10 border-accent/30 group-hover:border-accent'}`}>
             {user?.avatar ? (
               <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" />
             ) : (
-              <User className="w-5 h-5 text-accent" />
+              <User className={`w-5 h-5 ${isAdmin ? 'text-purple-400' : 'text-accent'}`} />
             )}
           </div>
           <div className="hidden md:block">
             <p className="text-sm font-bold text-white">{user?.name}</p>
-            <p className="text-[10px] text-accent uppercase font-black tracking-widest mt-0.5">Pro Member</p>
+            <p className={`text-[10px] uppercase font-black tracking-widest mt-0.5 ${isAdmin ? 'text-purple-400' : 'text-accent'}`}>
+                {isAdmin ? 'System Admin' : 'Pro Member'}
+            </p>
           </div>
         </Link>
       </div>
