@@ -63,24 +63,28 @@ const Login = () => {
             <h2 className="text-2xl font-bold mb-6 text-white text-center">Welcome Back</h2>
             
             <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+              <div className="glass-input p-0 flex items-center group transition-all duration-300 focus-within:ring-2 focus-within:ring-accent/50">
+                <div className="pl-4 pr-3 flex items-center justify-center border-r border-white/5">
+                  <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-accent transition-colors" />
+                </div>
                 <input
                   type="email"
                   name="email"
                   placeholder="Email Address"
-                  className="glass-input pl-10"
+                  className="w-full bg-transparent py-3.5 px-4 text-white placeholder-textMuted focus:outline-none"
                   onChange={handleChange}
                   required
                 />
               </div>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+              <div className="glass-input p-0 flex items-center group transition-all duration-300 focus-within:ring-2 focus-within:ring-accent/50">
+                <div className="pl-4 pr-3 flex items-center justify-center border-r border-white/5">
+                  <Lock className="h-5 w-5 text-gray-400 group-focus-within:text-accent transition-colors" />
+                </div>
                 <input
                   type="password"
                   name="password"
                   placeholder="Password"
-                  className="glass-input pl-10"
+                  className="w-full bg-transparent py-3.5 px-4 text-white placeholder-textMuted focus:outline-none"
                   onChange={handleChange}
                   required
                 />
