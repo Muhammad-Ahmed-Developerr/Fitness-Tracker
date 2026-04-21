@@ -8,7 +8,6 @@ import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import MainLayout from './components/layout/MainLayout';
 
-// Lazy Loaded SaaS Modules
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Workouts = lazy(() => import('./pages/Workouts'));
 const Nutrition = lazy(() => import('./pages/Nutrition'));
@@ -22,6 +21,7 @@ const AICoach = lazy(() => import('./pages/AICoach'));
 const Habits = lazy(() => import('./pages/Habits'));
 const Goals = lazy(() => import('./pages/Goals'));
 const Tasks = lazy(() => import('./pages/Tasks'));
+const Landing = lazy(() => import('./pages/guest/Landing'));
 const AdminPanel = lazy(() => import('./pages/AdminPanel'));
 const VerifyOTP = lazy(() => import('./pages/auth/VerifyOTP'));
 const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'));
@@ -35,16 +35,23 @@ const LoadingFallback = () => (
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return <div className="h-screen flex items-center justify-center text-accent">Loading...</div>;
+  if (loading) return <LoadingFallback />;
   if (!user) return <Navigate to="/login" replace />;
   return children;
 }
 
 function AdminRoute({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return <div className="h-screen flex items-center justify-center text-accent">Loading...</div>;
+  if (loading) return <LoadingFallback />;
   if (!user || user.role !== 'admin') return <Navigate to="/dashboard" replace />;
   return children;
+}
+
+function HomeRoute() {
+  const { user, loading } = useAuth();
+  if (loading) return <LoadingFallback />;
+  if (user) return <Navigate to="/dashboard" replace />;
+  return <Landing />;
 }
 
 function AppContent() {
@@ -52,6 +59,7 @@ function AppContent() {
     <Router>
       <Suspense fallback={<LoadingFallback />}>
         <Routes>
+          <Route path="/" element={<HomeRoute />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/verify-otp" element={<VerifyOTP />} />
@@ -122,9 +130,8 @@ function AppContent() {
             element={<AdminRoute><MainLayout><AdminPanel /></MainLayout></AdminRoute>} 
           />
 
-
-          
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
     </Router>
