@@ -11,11 +11,6 @@ const Header = ({ onMenuClick, isAdmin = false }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
-
-  useEffect(() => {
-    fetchNotifications();
-  }, [showNotifications]); // Refetch when opened
-
   const fetchNotifications = async () => {
     try {
       const res = await api.get('/notifications');
@@ -40,18 +35,28 @@ const Header = ({ onMenuClick, isAdmin = false }) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
     toast(`Searching: ${searchQuery}`, { icon: '🔍' });
-<<<<<<< HEAD
 
-    const path = window.location.pathname;
-    if (path === '/workouts' || path === '/nutrition') {
-        navigate(`${path}?search=${encodeURIComponent(searchQuery)}`);
+    if (isAdmin) {
+      navigate(`/admin/users?query=${encodeURIComponent(searchQuery)}`);
     } else {
+      const path = window.location.pathname;
+      if (path === '/workouts' || path === '/nutrition') {
+        navigate(`${path}?search=${encodeURIComponent(searchQuery)}`);
+      } else {
         navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+      }
     }
-=======
-    navigate(isAdmin ? `/admin/users?query=${encodeURIComponent(searchQuery)}` : `/workouts?search=${encodeURIComponent(searchQuery)}`);
->>>>>>> 6e72fa92aeb6be5332e41f7d27a27f698cdfc9ff
   };
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  useEffect(() => {
+    if (showNotifications) {
+      fetchNotifications();
+    }
+  }, [showNotifications]);
 
   const unreadCount = notifications.filter(n => !n.read).length;
 

@@ -1,17 +1,13 @@
 import { NavLink } from 'react-router-dom';
-<<<<<<< HEAD
-import { LayoutDashboard, Dumbbell, Apple, UserCircle, LogOut, TrendingUp, Settings, HelpCircle, Sparkles, CheckSquare, Target, Flame, CreditCard } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
-
-const Sidebar = ({ onNavClick, className = '' }) => {
-  const { logout, user } = useAuth();
-=======
-import { LayoutDashboard, Dumbbell, Apple, UserCircle, LogOut, TrendingUp, Settings, HelpCircle, ShieldCheck } from 'lucide-react';
+import { 
+  LayoutDashboard, Dumbbell, Apple, UserCircle, LogOut, 
+  TrendingUp, Settings, HelpCircle, Sparkles, CheckSquare, 
+  Target, Flame, CreditCard 
+} from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const Sidebar = ({ onNavClick, className = '' }) => {
   const { user, logout } = useAuth();
->>>>>>> 6e72fa92aeb6be5332e41f7d27a27f698cdfc9ff
 
   const navItems = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
@@ -28,13 +24,10 @@ const Sidebar = ({ onNavClick, className = '' }) => {
     { name: 'Support', icon: HelpCircle, path: '/support' },
   ];
 
-<<<<<<< HEAD
-=======
   const adminNavItems = [
     { name: 'Admin Dashboard', icon: LayoutDashboard, path: '/admin/dashboard' },
     { name: 'User Management', icon: UserCircle, path: '/admin/users' },
   ];
->>>>>>> 6e72fa92aeb6be5332e41f7d27a27f698cdfc9ff
 
   return (
     <div className={`w-64 glass border-y-0 border-l-0 rounded-none h-full min-h-screen flex flex-col ${className}`}>
