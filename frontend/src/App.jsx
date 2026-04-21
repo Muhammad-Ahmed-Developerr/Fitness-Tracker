@@ -22,9 +22,16 @@ const Habits = lazy(() => import('./pages/Habits'));
 const Goals = lazy(() => import('./pages/Goals'));
 const Tasks = lazy(() => import('./pages/Tasks'));
 const Landing = lazy(() => import('./pages/guest/Landing'));
-const AdminPanel = lazy(() => import('./pages/AdminPanel'));
+
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+const AdminAnalytics = lazy(() => import('./pages/admin/AdminAnalytics'));
+const AdminNotifications = lazy(() => import('./pages/admin/AdminNotifications'));
+const AdminSupport = lazy(() => import('./pages/admin/AdminSupport'));
+const UserManagement = lazy(() => import('./pages/admin/UserManagement'));
+
 const VerifyOTP = lazy(() => import('./pages/auth/VerifyOTP'));
 const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 const LoadingFallback = () => (
   <div className="h-screen flex flex-col items-center justify-center bg-dark text-accent">
@@ -124,14 +131,30 @@ function AppContent() {
             element={<ProtectedRoute><MainLayout><Search /></MainLayout></ProtectedRoute>} 
           />
 
-          {/* Admin Route */}
+          {/* Admin Routes */}
           <Route 
             path="/admin" 
-            element={<AdminRoute><MainLayout><AdminPanel /></MainLayout></AdminRoute>} 
+            element={<AdminRoute><MainLayout><AdminDashboard /></MainLayout></AdminRoute>} 
+          />
+          <Route 
+            path="/admin/users" 
+            element={<AdminRoute><MainLayout><UserManagement /></MainLayout></AdminRoute>} 
+          />
+          <Route 
+            path="/admin/analytics" 
+            element={<AdminRoute><MainLayout><AdminAnalytics /></MainLayout></AdminRoute>} 
+          />
+          <Route 
+            path="/admin/support" 
+            element={<AdminRoute><MainLayout><AdminSupport /></MainLayout></AdminRoute>} 
+          />
+          <Route 
+            path="/admin/notifications" 
+            element={<AdminRoute><MainLayout><AdminNotifications /></MainLayout></AdminRoute>} 
           />
 
           {/* Fallback */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
     </Router>
