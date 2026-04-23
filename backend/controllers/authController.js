@@ -7,6 +7,7 @@ const sendEmail = require('../utils/emailService');
 const { generateToken, generateRefreshToken } = require('../utils/generateToken');
 const { generateOTPEmailTemplate, generateWelcomeEmailTemplate } = require('../utils/emailTemplates');
 const { OAuth2Client } = require('google-auth-library');
+const { logEvent } = require('../services/logService');
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -114,6 +115,14 @@ const verifyOTP = async (req, res) => {
     }
 
     res.status(200).json({ success: true, message: 'Verification successful. You can now login.' });
+
+    // Log registration
+    await logEvent({
+      event: 'REGISTRATION_SUCCESS',
+      message: `New user verified: ${user.email}`,
+      category: 'AUTH',
+      user: user._id
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: 'Server error' });
@@ -169,6 +178,14 @@ const loginUser = async (req, res) => {
         role: user.role,
       },
       accessToken,
+    });
+
+    // Log login
+    await logEvent({
+      event: 'LOGIN_SUCCESS',
+      message: `User logged in: ${user.email}`,
+      category: 'AUTH',
+      user: user._id
     });
   } catch (error) {
     console.error(error);
@@ -350,6 +367,14 @@ const googleOAuthLogin = async (req, res) => {
         role: user.role,
       },
       accessToken,
+    });
+
+    // Log Google login
+    await logEvent({
+      event: 'GOOGLE_LOGIN_SUCCESS',
+      message: `User logged in via Google: ${user.email}`,
+      category: 'AUTH',
+      user: user._id
     });
 
   } catch (error) {
