@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useAuth } from '../../context/AuthContext';
 import { 
-  Users, Dumbbell, LifeBuoy, TrendingUp, Activity, CheckCircle, 
-  Clock, ShieldAlert, CreditCard, Sparkles, LayoutDashboard, Search, Loader2 
+  Users, Activity, Clock, ShieldAlert, Shield, CreditCard, Sparkles, LayoutDashboard, Search, Loader2, CheckCircle 
 } from 'lucide-react';
+import Loader from '../../components/common/Loader';
 import api from '../../services/api';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
-import toast from 'react-hot-toast';
 
 const AdminDashboard = () => {
+  const { user } = useAuth();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [recentNotifications, setRecentNotifications] = useState([]);
@@ -37,44 +38,14 @@ const AdminDashboard = () => {
   const fetchAdminStats = async () => {
     try {
       const res = await api.get('/admin/stats');
-      setStats({
-        ...res.data.data,
-        monthlyRevenue: '$12,495.50',
-        aiRequestsToday: 142,
-        plansDistribution: { FREE: 790, PRO: 310, ELITE: 140 }
-      });
+      setStats(res.data.data);
     } catch (error) {
       console.error('Failed to fetch admin stats');
-      setStats({
-        totalUsers: 1250,
-        activeWorkouts: 450,
-        pendingTickets: 12,
-        growth: '+15%',
-        monthlyRevenue: '$12,495.50',
-        aiRequestsToday: 142,
-        plansDistribution: { FREE: 790, PRO: 310, ELITE: 140 },
-        userActivity: [
-          { name: 'Mon', active: 400 },
-          { name: 'Tue', active: 300 },
-          { name: 'Wed', active: 600 },
-          { name: 'Thu', active: 800 },
-          { name: 'Fri', active: 500 },
-          { name: 'Sat', active: 900 },
-          { name: 'Sun', active: 1000 },
-        ]
-      });
     }
   };
 
   if (loading) {
-    return (
-      <div className="h-[60vh] flex flex-col items-center justify-center gap-4">
-        <Loader2 className="w-12 h-12 text-accent animate-spin" />
-        <p className="text-textMuted animate-pulse font-mono px-4 text-center italic uppercase tracking-widest">
-            Initializing Admin Intelligence Matrix...
-        </p>
-      </div>
-    );
+    return <Loader message="Initializing Admin Intelligence Matrix..." />;
   }
 
   const statCards = [
@@ -93,14 +64,19 @@ const AdminDashboard = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-            <ShieldAlert className="text-red-500 w-8 h-8"/> Central Admin Directive
+            <Shield className="text-red-500 w-8 h-8"/> Admin Dashboard
           </h1>
-          <p className="text-textMuted font-mono text-xs uppercase tracking-widest mt-1">Global system oversight and intelligence monitoring.</p>
+          <p className="text-textMuted font-mono text-xs uppercase tracking-widest mt-1">Central Intelligence Command</p>
         </div>
-        <div className="flex gap-3">
-            <span className="flex items-center gap-2 px-3 py-1 bg-green-500/10 text-green-400 border border-green-500/20 rounded-full text-[10px] font-black uppercase tracking-tighter">
-                <CheckCircle className="w-3 h-3" /> System Integrity: Optimal
-            </span>
+        
+        <div className="flex items-center gap-4 bg-white/5 border border-white/10 p-2 pl-4 rounded-2xl">
+            <div className="text-right">
+                <p className="text-sm font-bold text-white leading-none">{user?.name || 'Administrator'}</p>
+                <p className="text-[10px] text-accent uppercase tracking-tighter mt-1">Root Access</p>
+            </div>
+            <div className="w-10 h-10 rounded-xl bg-accent/20 border border-accent/30 flex items-center justify-center text-accent font-black">
+                {user?.name?.substring(0, 1) || 'A'}
+            </div>
         </div>
       </div>
 
@@ -188,7 +164,7 @@ const AdminDashboard = () => {
            <div className="mt-12 pt-6 border-t border-white/5">
                 <div className="flex items-center justify-between text-[10px] uppercase font-black tracking-widest text-gray-500">
                     <span>Active Subscription Growth</span>
-                    <span className="text-green-400">+12.4%</span>
+                    <span className="text-green-400">{stats?.subscriptionGrowth || '+0%'}</span>
                 </div>
            </div>
         </div>
@@ -233,30 +209,25 @@ const AdminDashboard = () => {
                 <ShieldAlert className="w-5 h-5 text-red-500" /> Authorized System Logs
             </h3>
             <div className="space-y-5 font-mono text-xs max-h-[350px] overflow-y-auto custom-scrollbar pr-2">
-                <div className="flex gap-4 text-green-400">
-                    <span className="opacity-50">[{new Date().toLocaleTimeString()}]</span>
-                    <span>SYSTEM_HEALTH_OPTIMAL: Cluster status online</span>
-                </div>
-                <div className="flex gap-4 text-accent">
-                    <span className="opacity-50">[{new Date().toLocaleTimeString()}]</span>
-                    <span>AUTH_NODE: Secure session initialized for UID_882</span>
-                </div>
-                <div className="flex gap-4 text-textMuted italic">
-                    <span className="opacity-50">[{new Date().toLocaleTimeString()}]</span>
-                    <span>COACH_INTEL: Gemini model-3 optimizations active</span>
-                </div>
-                <div className="flex gap-4 text-red-400">
-                    <span className="opacity-50">[{new Date().toLocaleTimeString()}]</span>
-                    <span>SEC_WARN: Blocked redundant handshake from IP: 45.x.x.x</span>
-                </div>
-                <div className="flex gap-4 text-yellow-400">
-                    <span className="opacity-50">[{new Date().toLocaleTimeString()}]</span>
-                    <span>API_LIMIT: Core process approaching rate-limit tier</span>
-                </div>
-                <div className="flex gap-4 text-white/40">
-                    <span className="opacity-50">[{new Date().toLocaleTimeString()}]</span>
-                    <span>SYS_CLEANUP: Flushed expired notification nodes</span>
-                </div>
+                {stats?.systemLogs?.length === 0 ? (
+                    <div className="text-center py-10">
+                         <p className="text-gray-500 italic">No system events logged.</p>
+                    </div>
+                ) : (
+                    stats?.systemLogs?.map((log, index) => (
+                        <div key={log._id || index} className={`flex gap-4 ${
+                            log.severity === 'CRITICAL' || log.severity === 'ERROR' ? 'text-red-400' :
+                            log.severity === 'WARNING' ? 'text-yellow-400' :
+                            log.category === 'AUTH' ? 'text-accent' :
+                            log.category === 'PAYMENT' ? 'text-green-400' : 'text-textMuted'
+                        }`}>
+                            <span className="opacity-50 flex-shrink-0">[{new Date(log.createdAt).toLocaleTimeString()}]</span>
+                            <span className="truncate">
+                                <span className="font-bold">{log.category}_{log.event}:</span> {log.message}
+                            </span>
+                        </div>
+                    ))
+                )}
             </div>
             <div className="mt-12 pt-6 border-t border-white/5 flex justify-end">
                 <button className="text-accent text-xs font-black uppercase tracking-widest hover:underline flex items-center gap-2 group">

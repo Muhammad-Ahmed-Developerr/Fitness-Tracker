@@ -29,7 +29,7 @@ const Sidebar = ({ onNavClick, className = '', isAdmin = false }) => {
     { name: 'User Management', icon: UserCircle, path: '/admin/users' },
     { name: 'System Analytics', icon: TrendingUp, path: '/admin/analytics' },
     { name: 'Support Tickets', icon: HelpCircle, path: '/admin/support' },
-    { name: 'System Alerts', icon: Bell, path: '/admin/notifications' },
+    { name: 'System Audit', icon: ShieldAlert, path: '/admin/audit' },
   ];
 
   return (

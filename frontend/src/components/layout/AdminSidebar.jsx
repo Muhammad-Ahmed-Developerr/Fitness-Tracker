@@ -9,7 +9,7 @@ const AdminSidebar = ({ onNavClick, className = '' }) => {
     { name: 'Overview', icon: LayoutDashboard, path: '/admin/dashboard' },
     { name: 'User Management', icon: Users, path: '/admin/users' },
     { name: 'Analytics', icon: BarChart3, path: '/admin/analytics' },
-    { name: 'Notifications', icon: Bell, path: '/admin/notifications' },
+    { name: 'System Audit', icon: ShieldAlert, path: '/admin/audit' },
     { name: 'Support Desk', icon: LifeBuoy, path: '/admin/support' },
   ];
 

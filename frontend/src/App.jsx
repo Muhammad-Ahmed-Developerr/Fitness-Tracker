@@ -25,7 +25,7 @@ const Landing = lazy(() => import('./pages/guest/Landing'));
 
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
 const AdminAnalytics = lazy(() => import('./pages/admin/AdminAnalytics'));
-const AdminNotifications = lazy(() => import('./pages/admin/AdminNotifications'));
+const AdminAudit = lazy(() => import('./pages/admin/AdminAudit'));
 const AdminSupport = lazy(() => import('./pages/admin/AdminSupport'));
 const UserManagement = lazy(() => import('./pages/admin/UserManagement'));
 
@@ -149,8 +149,8 @@ function AppContent() {
             element={<AdminRoute><MainLayout><AdminSupport /></MainLayout></AdminRoute>} 
           />
           <Route 
-            path="/admin/notifications" 
-            element={<AdminRoute><MainLayout><AdminNotifications /></MainLayout></AdminRoute>} 
+            path="/admin/audit" 
+            element={<AdminRoute><MainLayout><AdminAudit /></MainLayout></AdminRoute>} 
           />
 
           {/* Fallback */}

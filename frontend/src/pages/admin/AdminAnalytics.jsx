@@ -7,6 +7,7 @@ import {
 } from 'recharts';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
+import Loader from '../../components/common/Loader';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
@@ -25,37 +26,12 @@ const AdminAnalytics = () => {
       setData(res.data.data);
     } catch (e) {
       toast.error('Intelligence gathering failed');
-      // Mock data if server aggregation fails
-      setData({
-          workoutDistribution: [
-              { name: 'Strength', value: 45 },
-              { name: 'Cardio', value: 25 },
-              { name: 'HIIT', value: 20 },
-              { name: 'Flexibility', value: 10 },
-          ],
-          userGrowth: [
-              { month: '2026-01', users: 120 },
-              { month: '2026-02', users: 180 },
-              { month: '2026-03', users: 250 },
-              { month: '2026-04', users: 380 },
-          ],
-          avgMacros: { avgProtein: 145, avgCarbs: 210, avgFats: 65 },
-          activityPulse: [
-              { day: 'Mon', sessions: 45 },
-              { day: 'Tue', sessions: 52 },
-              { day: 'Wed', sessions: 48 },
-              { day: 'Thu', sessions: 70 },
-              { day: 'Fri', sessions: 65 },
-              { day: 'Sat', sessions: 90 },
-              { day: 'Sun', sessions: 110 },
-          ]
-      });
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading && !data) return <div className="h-screen flex items-center justify-center text-purple-400 font-black animate-pulse uppercase tracking-[0.5em]">Compiling System Intelligence...</div>;
+  if (loading && !data) return <Loader message="Compiling System Intelligence Matrix..." />;
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-12">
@@ -137,7 +113,7 @@ const AdminAnalytics = () => {
                   paddingAngle={5}
                   dataKey="value"
                 >
-                  {data?.workoutDistribution.map((entry, index) => (
+                  {data?.workoutDistribution?.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>

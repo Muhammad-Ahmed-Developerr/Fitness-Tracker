@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Bell, Send, Users, User, ShieldAlert, CheckCircle, Clock, Trash2, Search, Filter } from 'lucide-react';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
+import Loader from '../../components/common/Loader';
 
 const AdminNotifications = () => {
   const [notifications, setNotifications] = useState([]);
@@ -134,16 +135,18 @@ const AdminNotifications = () => {
             <thead>
               <tr className="bg-[#07111a] border-b border-white/5">
                 <th className="px-6 py-4 text-xs font-black uppercase text-gray-500">Recipient</th>
-                <th className="px-6 py-4 text-xs font-black uppercase text-gray-500">Type</th>
-                <th className="px-6 py-4 text-xs font-black uppercase text-gray-500">Message</th>
-                <th className="px-6 py-4 text-xs font-black uppercase text-gray-500">Timestamp</th>
-                <th className="px-6 py-4 text-xs font-black uppercase text-gray-500">Status</th>
+                <th className="px-6 py-4 text-xs font-black uppercase text-gray-500">Origin/Sender</th>
+                <th className="px-6 py-4 text-xs font-black uppercase text-gray-500">Alert Type</th>
+                <th className="px-6 py-4 text-xs font-black uppercase text-gray-500">Payload Message</th>
+                <th className="px-6 py-4 text-xs font-black uppercase text-gray-500 text-right">Dispatch Log</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {loading ? (
                 <tr>
-                   <td colSpan="5" className="px-6 py-12 text-center text-gray-500 animate-pulse">Synchronizing communication logs...</td>
+                   <td colSpan="5">
+                     <Loader fullScreen={false} message="Synchronizing Communication Protocol..." />
+                   </td>
                 </tr>
               ) : filteredNotifications.length === 0 ? (
                 <tr>
@@ -164,6 +167,14 @@ const AdminNotifications = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${notif.sender ? 'bg-accent' : 'bg-orange-500'}`} />
+                        <span className="text-[10px] font-black uppercase tracking-tighter text-white">
+                            {notif.sender ? notif.sender.name : 'SYSTEM_CORE'}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
                       <span className={`text-[10px] font-black uppercase px-2 py-1 rounded border ${
                         notif.type === 'System' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
                         notif.type === 'Goal' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
@@ -175,12 +186,10 @@ const AdminNotifications = () => {
                     <td className="px-6 py-4">
                       <p className="text-sm text-gray-300 max-w-xs md:max-w-md truncate">{notif.message}</p>
                     </td>
-                    <td className="px-6 py-4">
-                      <p className="text-xs text-gray-500">{new Date(notif.createdAt).toLocaleString()}</p>
-                    </td>
-                    <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 text-green-400 text-xs font-bold">
-                            <CheckCircle className="w-3 h-3" /> Transmitted
+                    <td className="px-6 py-4 text-right">
+                        <div className="flex flex-col items-end">
+                            <p className="text-[10px] text-gray-500 font-bold">{new Date(notif.createdAt).toLocaleDateString()}</p>
+                            <p className="text-[9px] text-gray-600 uppercase font-black">{new Date(notif.createdAt).toLocaleTimeString()}</p>
                         </div>
                     </td>
                   </tr>
