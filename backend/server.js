@@ -45,6 +45,7 @@ app.use('/api/ai', require('./routes/aiRoutes'));
 app.use('/api/habits', require('./routes/habitRoutes'));
 app.use('/api/goals', require('./routes/goalRoutes'));
 app.use('/api/tasks', require('./routes/taskRoutes'));
+app.use('/api/admin', require('./routes/adminRoutes'));
 const { errorHandler } = require('./middleware/errorMiddleware');
 
 
